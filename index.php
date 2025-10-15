@@ -1,75 +1,45 @@
 <?php
-require_once 'Mahasiswa.php';
-require_once 'Dosen.php';
-require_once 'Staff.php';
-require_once 'Login.php'; // pastikan interface Login tersedia
-
-// Fungsi tampilkanInfoUser didefinisikan sekali (sebelum dipanggil)
-function tampilkanInfoUser(User $user)
-{
-    echo "Polymorphism: " . $user->getUsername() . " memiliki peran sebagai " . $user->getRole();
-    
-    // Jika objek adalah Staff, tampilkan departemen juga
-    if ($user instanceof Staff) {
-        echo " (Departemen: " . $user->getDepartemen() . ")";
-    }
-    echo "<br>";
-}
-
-// Buat object dari Mahasiswa dan Dosen
-$mahasiswa = new Mahasiswa('Budi');
-$dosen = new Dosen('Dr. Siti');
-
-// Tampilkan info dasar
-echo "<h2>Info User:</h2>";
-echo $mahasiswa->getUsername() . " adalah seorang " . $mahasiswa->getRole() . "<br>";
-echo $dosen->getUsername() . " adalah seorang " . $dosen->getRole() . "<br>";
-
-echo "<hr>";
-
-// Demonstrasi Polymorphism
-echo "<h2>Demonstrasi Polymorphism:</h2>";
-tampilkanInfoUser($mahasiswa);
-tampilkanInfoUser($dosen);
-
-echo "<hr>";
-
-// Demonstrasi Interface
-echo "<h2>Demonstrasi Interface:</h2>";
-$dosen->kirimNotifikasi("Jadwal kuliah besok dibatalkan.");
-
-echo "<hr>";
-
-// Latihan 3: Polymorphism Lebih Kompleks
-echo "<h2>Latihan 3: Polymorphism Lebih Kompleks</h2>";
-
-$objects = [
-    new Mahasiswa('Budi'),
-    new Dosen('Dr. Siti'),
-    new Staff('Ahmad', 'IT Support'),
-    new Mahasiswa('Sari'),
-    new Dosen('Prof. Joko'),
-    new Staff('Dewi', 'Administrasi')
-];
-
-foreach ($objects as $obj) {
-    tampilkanInfoUser($obj);
-    
-    // Jika objek mengimplementasikan Login, panggil login()
-    if ($obj instanceof Login) {
-        echo "Testing login: ";
-        $obj->login($obj->getUsername(), "1234"); // Password benar
-        
-        echo "Testing login dengan password salah: ";
-        $obj->login($obj->getUsername(), "wrong"); // Password salah
-    }
-    
-    echo "---<br>";
-}
-
-// Tampilkan info staff terpisah
-echo "<h2>Info Staff:</h2>";
-$staff = new Staff('Ahmad', 'IT Support');
-echo $staff->getUsername() . " adalah seorang " . $staff->getRole() . 
-     " di departemen " . $staff->getDepartemen() . "<br>";
+include 'config.php';
+$result = mysqli_query($conn, "SELECT * FROM prodi");
 ?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Data Prodi</title>
+</head>
+<body>
+    <h2>Data Program Studi</h2>
+    <a href="tambah.php">+ Tambah Data</a>
+    <br><br>
+
+    <table border="1" cellpadding="8">
+        <tr>
+            <th>ID</th>
+            <th>Nama Prodi</th>
+            <th>Kode Prodi</th>
+            <th>Status</th>
+            <th>Jenjang</th>
+            <th>Kaprodi</th>
+            <th>Fakultas</th>
+            <th>Aksi</th>
+        </tr>
+
+        <?php while($row = mysqli_fetch_assoc($result)) { ?>
+        <tr>
+            <td><?= $row['id'] ?></td>
+            <td><?= $row['nama_prodi'] ?></td>
+            <td><?= $row['kode_prodi'] ?></td>
+            <td><?= $row['status'] ?></td>
+            <td><?= $row['jenjang'] ?></td>
+            <td><?= $row['kaprodi'] ?></td>
+            <td><?= $row['fakultas'] ?></td>
+            <td>
+                <a href="edit.php?id=<?= $row['id'] ?>">Edit</a> | 
+                <a href="hapus.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus data?')">Hapus</a>
+            </td>
+        </tr>
+        <?php } ?>
+    </table>
+</body>
+</html>
