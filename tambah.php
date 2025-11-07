@@ -1,54 +1,26 @@
-<?php
-include 'config.php';
-
-if (isset($_POST['simpan'])) {
-    $nama_prodi = $_POST['nama_prodi'];
-    $kode_prodi = $_POST['kode_prodi'];
-    $status     = $_POST['status'];
-    $jenjang    = $_POST['jenjang'];
-    $kaprodi    = $_POST['kaprodi'];
-    $fakultas   = $_POST['fakultas'];
-
-    $query = "INSERT INTO prodi (nama_prodi, kode_prodi, status, jenjang, kaprodi, fakultas)
-              VALUES ('$nama_prodi', '$kode_prodi', '$status', '$jenjang', '$kaprodi', '$fakultas')";
-    
-    if (mysqli_query($conn, $query)) {
-        header("Location: index.php");
-        exit;
-    } else {
-        echo "Gagal menambah data: " . mysqli_error($conn);
-    }
-}
-?>
-
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-    <title>Tambah Data Prodi</title>
+    <meta charset="utf-8">
+    <title>Tambah Mahasiswa</title>
+    <link rel="stylesheet" href="/crud-mvc-mahasiswa/public/assets/style.css">
 </head>
 <body>
-    <h2>Tambah Data Prodi</h2>
-    <form method="POST">
-        <label>Nama Prodi:</label><br>
-        <input type="text" name="nama_prodi" required><br><br>
+<div class="container">
+    <h2>Tambah Data Mahasiswa</h2>
+    <form action="" method="POST" class="form">
+        <label>Nama</label>
+        <input type="text" name="nama" required>
 
-        <label>Kode Prodi:</label><br>
-        <input type="text" name="kode_prodi" required><br><br>
+        <label>NIM</label>
+        <input type="text" name="nim" required>
 
-        <label>Status:</label><br>
-        <select name="status">
-            <option value="aktif">Aktif</option>
-            <option value="tidak aktif">Tidak Aktif</option>
-        </select><br><br>
+        <label>Jurusan</label>
+        <input type="text" name="jurusan" required>
 
-        <label>Jenjang:</label><br>
-        <input type="text" name="jenjang" placeholder="S1 / D3 / D4" required><br><br>
-
-        <label>Kaprodi:</label><br>
-        <input type="text" name="kaprodi" required><br><br>
-
-        <label>Fakultas:</label><br>
-        <input type="text" name="fakultas" required><br><br>
-
-        <button type="submit" name="simpan">Simpan</button>
-        <a h
+        <button class="btn" type="submit">Simpan</button>
+        <a class="btn btn-muted" href="/crud-mvc-mahasiswa/public/mahasiswa">Batal</a>
+    </form>
+</div>
+</body>
+</html>

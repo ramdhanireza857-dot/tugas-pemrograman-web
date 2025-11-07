@@ -1,38 +1,53 @@
 <?php
 class Database {
-    private static $instance = null;
-    private $conn;
+    private $host = DB_HOST;
+    private $user = DB_USER;
+    private $pass = DB_PASS;
+    private $dbname = DB_NAME;
 
-    private $host = "localhost";
-    private $dbname = "akademik_db";
-    private $username = "root";
-    private $password = "";
+    private $dbh;
+    private $stmt;
 
-    // Constructor private agar hanya bisa diakses dari dalam class
-    private function __construct() {
+    public function __construct() {
+        $dsn = "mysql:host={$this->host};dbname={$this->dbname}";
+        $option = [
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ];
         try {
-            $this->conn = new PDO(
-                "mysql:host={$this->host};dbname={$this->dbname}",
-                $this->username,
-                $this->password
-            );
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->dbh = new PDO($dsn, $this->user, $this->pass, $option);
         } catch (PDOException $e) {
-            echo "Koneksi gagal: " . $e->getMessage();
+            die($e->getMessage());
         }
     }
 
-    // Method untuk mendapatkan instance
-    public static function getInstance() {
-        if (self::$instance === null) {
-            self::$instance = new Database();
-        }
-        return self::$instance;
+    public function query($query) {
+        $this->stmt = $this->dbh->prepare($query);
     }
 
-    // Method untuk mengembalikan koneksi
-    public function getConnection() {
-        return $this->conn;
+    public function bind($param, $value, $type = null) {
+        if (is_null($type)) {
+            switch (true) {
+                case is_int($value): $type = PDO::PARAM_INT; break;
+                case is_bool($value): $type = PDO::PARAM_BOOL; break;
+                case is_null($value): $type = PDO::PARAM_NULL; break;
+                default: $type = PDO::PARAM_STR;
+            }
+        }
+        $this->stmt->bindValue(':' . ltrim($param, ':'), $value, $type);
+    }
+
+    public function execute() {
+        $this->stmt->execute();
+    }
+
+    public function resultSet() {
+        $this->execute();
+        return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function single() {
+        $this->execute();
+        return $this->stmt->fetch(PDO::FETCH_ASSOC);
     }
 }
-?>

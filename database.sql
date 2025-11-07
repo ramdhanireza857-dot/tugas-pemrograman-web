@@ -1,0 +1,9 @@
+CREATE DATABASE IF NOT EXISTS db_mvc;
+USE db_mvc;
+
+CREATE TABLE IF NOT EXISTS mahasiswa (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama VARCHAR(100),
+    nim VARCHAR(20),
+    jurusan VARCHAR(100)
+);

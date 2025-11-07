@@ -1,12 +1,6 @@
 <?php
-$host = "localhost";
-$user = "root";     // default user XAMPP
-$pass = "";
-$db   = "db_universitas";
-
-$conn = mysqli_connect($host, $user, $pass, $db);
-
-if (!$conn) {
-    die("Koneksi gagal: " . mysqli_connect_error());
-}
-?>
+// Database configuration
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'db_mvc');

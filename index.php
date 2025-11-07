@@ -1,45 +1,41 @@
 <?php
-include 'config.php';
-$result = mysqli_query($conn, "SELECT * FROM prodi");
+// $data['mahasiswa'] expected
 ?>
-
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
-    <title>Data Prodi</title>
+    <meta charset="utf-8">
+    <title>Data Mahasiswa</title>
+    <link rel="stylesheet" href="/crud-mvc-mahasiswa/public/assets/style.css">
 </head>
 <body>
-    <h2>Data Program Studi</h2>
-    <a href="tambah.php">+ Tambah Data</a>
-    <br><br>
-
-    <table border="1" cellpadding="8">
-        <tr>
-            <th>ID</th>
-            <th>Nama Prodi</th>
-            <th>Kode Prodi</th>
-            <th>Status</th>
-            <th>Jenjang</th>
-            <th>Kaprodi</th>
-            <th>Fakultas</th>
-            <th>Aksi</th>
-        </tr>
-
-        <?php while($row = mysqli_fetch_assoc($result)) { ?>
-        <tr>
-            <td><?= $row['id'] ?></td>
-            <td><?= $row['nama_prodi'] ?></td>
-            <td><?= $row['kode_prodi'] ?></td>
-            <td><?= $row['status'] ?></td>
-            <td><?= $row['jenjang'] ?></td>
-            <td><?= $row['kaprodi'] ?></td>
-            <td><?= $row['fakultas'] ?></td>
-            <td>
-                <a href="edit.php?id=<?= $row['id'] ?>">Edit</a> | 
-                <a href="hapus.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus data?')">Hapus</a>
-            </td>
-        </tr>
-        <?php } ?>
+<div class="container">
+    <h1>Data Mahasiswa</h1>
+    <a class="btn" href="/crud-mvc-mahasiswa/public/mahasiswa/tambah">+ Tambah Data</a>
+    <table>
+        <thead>
+            <tr><th>ID</th><th>Nama</th><th>NIM</th><th>Jurusan</th><th>Aksi</th></tr>
+        </thead>
+        <tbody>
+        <?php if (!empty($data['mahasiswa'])): ?>
+            <?php foreach ($data['mahasiswa'] as $mhs): ?>
+            <tr>
+                <td><?= htmlspecialchars($mhs['id']); ?></td>
+                <td><?= htmlspecialchars($mhs['nama']); ?></td>
+                <td><?= htmlspecialchars($mhs['nim']); ?></td>
+                <td><?= htmlspecialchars($mhs['jurusan']); ?></td>
+                <td>
+                    <a href="/crud-mvc-mahasiswa/public/mahasiswa/detail/<?= $mhs['id']; ?>">Detail</a> |
+                    <a href="/crud-mvc-mahasiswa/public/mahasiswa/edit/<?= $mhs['id']; ?>">Edit</a> |
+                    <a href="/crud-mvc-mahasiswa/public/mahasiswa/hapus/<?= $mhs['id']; ?>" onclick="return confirm('Yakin hapus?')">Hapus</a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr><td colspan="5">Belum ada data.</td></tr>
+        <?php endif; ?>
+        </tbody>
     </table>
+</div>
 </body>
 </html>
